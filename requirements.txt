@@ -9,3 +9,5 @@ whitenoise
 gunicorn
 dj-database-url
 django-redis-cache
+
+loguru
