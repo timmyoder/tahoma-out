@@ -1,6 +1,7 @@
 # pycharm stuff
 .idea/
 photos/
+data/
 
 .DS_Store
 

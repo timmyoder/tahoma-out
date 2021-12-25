@@ -4,35 +4,35 @@ import datetime as dt
 
 import requests
 from loguru import logger
-# todo download smaller image
-# from PIL import Image
-# import pyvips
 
 from config import PHOTOS_DIR, PHOTO_LOG
 
 cam_url = 'https://cdn.tegna-media.com/king/weather/waterfront.jpg'
 
-# todo: add multiple logs, move to config.py
 logger.add(PHOTO_LOG)
 
-while True:
-    minute = dt.datetime.now().minute
-    hour = dt.datetime.now().hour
-    date = dt.datetime.now().date()
-    label = f'{date}_{hour}_{minute}'
-    photo_path = PHOTOS_DIR / f'{label}.png'
 
-    if 4 < hour < 22:
-        try:
-            response = requests.get(cam_url, stream=True)
-            logger.info(f'retrieving {photo_path.name}')
+def training_data_downloader():
+    while True:
+        minute = dt.datetime.now().minute
+        hour = dt.datetime.now().hour
+        date = dt.datetime.now().date()
+        label = f'{date}_{hour}_{minute}'
+        photo_path = PHOTOS_DIR / f'{label}.png'
 
-            with open(photo_path, 'wb') as out_file:
-                shutil.copyfileobj(response.raw, out_file)
-            logger.success(f'{photo_path.name} downloaded')
-            del response
-        except requests.exceptions.ConnectionError as error:
-            logger.debug(error)
-            time.sleep(60*3)
-            continue
-    time.sleep(60 * 8)
+        if 4 < hour < 22:
+            try:
+                response = requests.get(cam_url, stream=True)
+                logger.info(f'retrieving {photo_path.name}')
+
+                with open(photo_path, 'wb') as out_file:
+                    shutil.copyfileobj(response.raw, out_file)
+                logger.success(f'{photo_path.name} downloaded')
+                del response
+            except requests.exceptions.ConnectionError as error:
+                logger.debug(error)
+                time.sleep(60*3)
+                continue
+        time.sleep(60 * 8)
+
+
