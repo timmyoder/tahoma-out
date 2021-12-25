@@ -1,0 +1,16 @@
+{% extends 'base.jinja2' %}
+{% load static %}
+
+{% block subtitle %}
+
+ <div class="bg-text">Is she out?</div>
+{% endblock subtitle %}
+
+{% block content %}
+
+<img src="{% static "current_pic.png" %}" alt="King5 waterfront webcam">
+
+<p style="font-size:50px;">{{ predictor.prediction }}</p>
+
+
+{% endblock content %}
