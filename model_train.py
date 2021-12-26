@@ -1,29 +1,24 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 
-import matplotlib.pyplot as plt
-
-from config import PHOTOS_DIR
+from config import PHOTOS_DIR, MODELS_DIR, MODEL_LOG
 
 image_size = (256, 256)
 batch_size = 32
-
+dataset_options = {'directory': PHOTOS_DIR,
+                   'labels': 'inferred',
+                   'label_mode': 'int',
+                   'validation_split': 0.2,
+                   'seed': 1337,
+                   'batch_size': batch_size}
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
-    PHOTOS_DIR,
-    validation_split=0.2,
     subset="training",
-    seed=1337,
-    image_size=image_size,
-    batch_size=batch_size,
+    **dataset_options
 )
 val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-    PHOTOS_DIR,
-    validation_split=0.2,
     subset="validation",
-    seed=1337,
-    image_size=image_size,
-    batch_size=batch_size,
+    **dataset_options
 )
 #
 # plt.figure(figsize=(10, 10))
@@ -37,85 +32,29 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
 #
 train_ds = train_ds.prefetch(buffer_size=32)
 val_ds = val_ds.prefetch(buffer_size=32)
-#
-#
-# def make_model(input_shape, num_classes):
-#     inputs = keras.Input(shape=input_shape)
-#     # Image augmentation block
-#     # Entry block
-#     x = layers.experimental.preprocessing.Rescaling(1.0 / 255)(inputs)
-#     x = layers.Conv2D(32, 3, strides=2, padding="same")(x)
-#     x = layers.BatchNormalization()(x)
-#     x = layers.Activation("relu")(x)
-#
-#     x = layers.Conv2D(64, 3, padding="same")(x)
-#     x = layers.BatchNormalization()(x)
-#     x = layers.Activation("relu")(x)
-#
-#     previous_block_activation = x  # Set aside residual
-#
-#     for size in [128, 256, 512, 728]:
-#         x = layers.Activation("relu")(x)
-#         x = layers.SeparableConv2D(size, 3, padding="same")(x)
-#         x = layers.BatchNormalization()(x)
-#
-#         x = layers.Activation("relu")(x)
-#         x = layers.SeparableConv2D(size, 3, padding="same")(x)
-#         x = layers.BatchNormalization()(x)
-#
-#         x = layers.MaxPooling2D(3, strides=2, padding="same")(x)
-#
-#         # Project residual
-#         residual = layers.Conv2D(size, 1, strides=2, padding="same")(
-#             previous_block_activation
-#         )
-#         x = layers.add([x, residual])  # Add back residual
-#         previous_block_activation = x  # Set aside next residual
-#
-#     x = layers.SeparableConv2D(1024, 3, padding="same")(x)
-#     x = layers.BatchNormalization()(x)
-#     x = layers.Activation("relu")(x)
-#
-#     x = layers.GlobalAveragePooling2D()(x)
-#     if num_classes == 2:
-#         activation = "sigmoid"
-#         units = 1
-#     else:
-#         activation = "softmax"
-#         units = num_classes
-#
-#     x = layers.Dropout(0.5)(x)
-#     outputs = layers.Dense(units, activation=activation)(x)
-#     return keras.Model(inputs, outputs)
-#
-#
-# model = make_model(input_shape=image_size, num_classes=4)
-# keras.utils.plot_model(model, show_shapes=True)
-#
-# epochs = 50
-#
-# callbacks = [
-#     keras.callbacks.ModelCheckpoint("save_at_{epoch}.h5"),
-# ]
-# model.compile(
-#     optimizer=keras.optimizers.Adam(1e-3),
-#     loss="binary_crossentropy",
-#     metrics=["accuracy"],
-# )
-# model.fit(
-#     train_ds, epochs=epochs, callbacks=callbacks, validation_data=val_ds,
-# )
 
 model = tf.keras.models.Sequential()
-model.add(layers.Flatten(input_shape=(256, 256, 3)))
-model.add(layers.Dense(300, activation='relu'))
-model.add(layers.Dense(100, activation='relu'))
+model.add(layers.experimental.preprocessing.Resizing(*image_size))
+model.add(layers.experimental.preprocessing.Rescaling(1. / 255))
+model.add(layers.Flatten(input_shape=(*image_size, 3)))
+model.add(layers.Dense(150, activation='relu'))
+model.add(layers.Dense(50, activation='relu'))
 model.add(layers.Dense(4, activation='softmax'))
 
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer='sgd',
               metrics=['accuracy'])
 
-history = model.fit(train_ds, epochs=20, validation_data=val_ds)
+model_path = MODELS_DIR / 'simple_sequential_small.h5'
+early_stopping_cb = tf.keras.callbacks.EarlyStopping(patience=8)
+model_checkpoint_cb = tf.keras.callbacks.ModelCheckpoint(model_path,
+                                                         save_best_only=True)
+run_index = 2  # increment every time you train the model
+run_logdir = MODEL_LOG / f'simple_sequential_run_{run_index}'
+tensorboard_cb = tf.keras.callbacks.TensorBoard(run_logdir)
+callbacks = [early_stopping_cb,
+             model_checkpoint_cb,
+             tensorboard_cb
+             ]
 
-
+history = model.fit(train_ds, epochs=20, validation_data=val_ds, callbacks=callbacks)

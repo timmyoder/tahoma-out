@@ -10,7 +10,12 @@
 
 <img src="{% static "current_pic.png" %}" alt="King5 waterfront webcam">
 
-<p style="font-size:50px;">{{ predictor.prediction }}</p>
+<p style="font-size:40px;"><b>I think it is: {{ predictor.winner}}</b></p>
 
+<p style="font-size:30px;">Probabilities</p>
+<li style="font-size:20px;">All the way out: {{ predictor.formatted_predictions.0}}</li>
+<li style="font-size:20px;">Bottom out: {{ predictor.formatted_predictions.1 }}</li>
+<li style="font-size:20px;">Only the tip is out: {{ predictor.formatted_predictions.3 }}</li>
+<li style="font-size:20px;">Not out: {{ predictor.formatted_predictions.2 }}</li>
 
 {% endblock content %}

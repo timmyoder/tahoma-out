@@ -6,6 +6,8 @@ PHOTOS_DIR = ROOT / 'data' / 'raw_images'
 SRC = ROOT / 'src'
 LOGS = ROOT / 'logs'
 
-EDIT_DIR = PHOTOS_DIR / 'edited'
+STATIC_DIR = ROOT / 'predictor' / 'static'
+
 
 PHOTO_LOG = LOGS / 'p.log'
+MODEL_LOG = LOGS / 'model.log'
