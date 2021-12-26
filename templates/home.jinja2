@@ -1,5 +1,4 @@
 {% extends 'base.jinja2' %}
-{% load static %}
 
 {% block subtitle %}
 
@@ -8,7 +7,7 @@
 
 {% block content %}
 
-<img src="{% static "current_pic.png" %}" alt="King5 waterfront webcam">
+<img src="{{ MEDIA_URL }}random_picture.png" alt="King5 waterfront webcam">
 
 <p style="font-size:40px;"><b>I think it is: {{ predictor.winner}}</b></p>
 

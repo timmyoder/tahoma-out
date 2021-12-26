@@ -4,14 +4,14 @@ from predictor.prediction import Predictor
 import numpy as np
 import shutil
 
-from config import PHOTOS_DIR, STATIC_DIR
+from config import PHOTOS_DIR, MEDIA_DIR
 
 
 def home(request):
     all_pics = [pic for pic in PHOTOS_DIR.rglob('*.png')]
 
     rand_pic = np.random.choice(all_pics)
-    to_file = STATIC_DIR / 'current_pic.png'
+    to_file = MEDIA_DIR / 'random_picture.png'
 
     shutil.copy(str(rand_pic), str(to_file))
 
@@ -19,7 +19,7 @@ def home(request):
     predictor.load_image()
     predictor.predict()
 
-    return render(request, 'home.jinja2', {'image': rand_pic,
+    return render(request, 'home.jinja2', {'image': rand_pic.name,
                                            "predictor": predictor})
 
 
