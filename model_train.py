@@ -2,7 +2,11 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers
 
+import mlflow
+
 from config import PHOTOS_DIR, MODELS_DIR, MODEL_LOG
+
+mlflow.tensorflow.autolog()
 
 image_size = (128, 256)
 batch_size = 32
