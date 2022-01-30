@@ -11,3 +11,6 @@ gunicorn
 # django-redis-cache
 
 loguru
+
+djangorestframework
+mlflow
