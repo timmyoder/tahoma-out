@@ -1,20 +1,39 @@
 {% extends 'base.jinja2' %}
 
 {% block subtitle %}
-
- <div class="bg-text">Is she out?</div>
+ <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+        <br/>
+        <h2>Is She out <small>Can you see Mt. Rainier from Seattle? </small></h2>
+      </div>
+    </div>
 {% endblock subtitle %}
 
 {% block content %}
 
-<img src="{{ MEDIA_URL }}random_picture.png" alt="King5 waterfront webcam">
+    <div class="row">
+      <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
+      <div class="col-sm">
+        <figure><img src="{{ MEDIA_URL }}{{ image }}" alt="King5 waterfront webcam" />
+          <figcaption>Last image pulled from the waterfront webcam</figcaption>
+        </figure>
+      </div>
+      <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
+    </div>
 
-<p style="font-size:40px;"><b>I think it is: {{ predictor.winner}}</b></p>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+        <h2>I think it is: {{ predictor.winner}}</h2>
+        <p>Probabilities</p>
+          <ul>
+              <li>All the way out: {{ predictor.formatted_predictions.0}}</li>
+              <li>Bottom out: {{ predictor.formatted_predictions.1 }}</li>
+              <li>Only the tip is out: {{ predictor.formatted_predictions.3 }}</li>
+              <li>Not out: {{ predictor.formatted_predictions.2 }}</li>
+          </ul>
+      </div>
+    </div>
 
-<p style="font-size:30px;">Probabilities</p>
-<li style="font-size:20px;">All the way out: {{ predictor.formatted_predictions.0}}</li>
-<li style="font-size:20px;">Bottom out: {{ predictor.formatted_predictions.1 }}</li>
-<li style="font-size:20px;">Only the tip is out: {{ predictor.formatted_predictions.3 }}</li>
-<li style="font-size:20px;">Not out: {{ predictor.formatted_predictions.2 }}</li>
 
 {% endblock content %}

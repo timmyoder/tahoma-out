@@ -4,7 +4,7 @@ from tensorflow.keras import layers
 
 from config import PHOTOS_DIR, MODELS_DIR, MODEL_LOG
 
-image_size = (256, 256)
+image_size = (128, 256)
 batch_size = 32
 dataset_options = {'directory': PHOTOS_DIR,
                    'labels': 'inferred',
@@ -73,11 +73,12 @@ def train_simple_sequential():
     return history, model
 
 
-def train_simple_cnn():
+def train_cnn():
     model = tf.keras.models.Sequential([
         layers.experimental.preprocessing.Resizing(*image_size),
         layers.experimental.preprocessing.Rescaling(1./255),
-        layers.Conv2D(64, 7, activation='relu', padding='same', input_shape=[*image_size, 3]),
+        layers.Conv2D(64, 7, strides=2, activation='relu',
+                      padding='same', input_shape=[*image_size, 3]),
         layers.MaxPool2D(2),
         layers.Conv2D(128, 3, activation='relu', padding='same'),
         layers.Conv2D(128, 3, activation='relu', padding='same'),
@@ -97,11 +98,11 @@ def train_simple_cnn():
                   optimizer='sgd',
                   metrics=['accuracy'])
 
-    model_path = MODELS_DIR / 'simple_sequential_small.h5'
+    model_path = MODELS_DIR / 'simple_cnn_weighted.h5'
     early_stopping_cb = tf.keras.callbacks.EarlyStopping(patience=8)
     model_checkpoint_cb = tf.keras.callbacks.ModelCheckpoint(model_path,
                                                              save_best_only=True)
-    run_index = 1  # increment every time you train the model
+    run_index = 3  # increment every time you train the model
     run_logdir = MODEL_LOG / f'simple_cnn_run_{run_index}'
     tensorboard_cb = tf.keras.callbacks.TensorBoard(run_logdir)
     callbacks = [early_stopping_cb,
@@ -109,9 +110,15 @@ def train_simple_cnn():
                  tensorboard_cb
                  ]
 
-    history = model.fit(train_ds, epochs=20, validation_data=val_ds, callbacks=callbacks)
+    class_weights = {0: 2.48,
+                     1: 1.2,
+                     2: 1.,
+                     3: 1.2}
+
+    history = model.fit(train_ds, epochs=20, class_weight=class_weights,
+                        validation_data=val_ds, callbacks=callbacks)
 
     return history, model
 
 
-hist, mod = train_simple_cnn()
+hist, mod = train_cnn()

@@ -3,12 +3,12 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
-from config import MODELS_DIR, STATIC_DIR
+from config import MODELS_DIR, MEDIA_DIR
 
 
 class Predictor:
     def __init__(self, model_name='simple_sequential_small.h5',
-                 image=STATIC_DIR / 'current_pic.png'):
+                 image=MEDIA_DIR / 'dne.png'):
         self.prediction = None
         self.model_name = model_name
         self.model = load_model(MODELS_DIR / self.model_name)

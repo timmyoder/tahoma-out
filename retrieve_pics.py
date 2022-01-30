@@ -5,7 +5,7 @@ import datetime as dt
 import requests
 from loguru import logger
 
-from config import PHOTOS_DIR, PHOTO_LOG
+from config import PHOTOS_DIR, PHOTO_LOG, MEDIA_DIR
 
 cam_url = 'https://cdn.tegna-media.com/king/weather/waterfront.jpg'
 
@@ -36,3 +36,15 @@ def training_data_downloader():
         time.sleep(60 * 8)
 
 
+def get_current_image():
+    live_path = MEDIA_DIR / 'live.png'
+    try:
+        response = requests.get(cam_url, stream=True)
+        logger.info(f'retrieving live photo')
+
+        with open(live_path, 'wb') as out_file:
+            shutil.copyfileobj(response.raw, out_file)
+        logger.success(f'live photo downloaded')
+        del response
+    except requests.exceptions.ConnectionError as error:
+        logger.debug(error)
