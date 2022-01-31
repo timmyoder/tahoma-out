@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from django.template.context_processors import media
+import django_heroku
 
 APP_URL = 'https://murmuring-castle-50506.herokuapp.com/'
 
@@ -122,3 +123,6 @@ STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')  # 'data' is my media folder
 MEDIA_URL = '/media/'
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())

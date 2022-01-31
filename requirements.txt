@@ -7,6 +7,7 @@ whitenoise
 gunicorn
 dj-database-url
 django-redis-cache
+django-heroku
 loguru
 djangorestframework
 cloudinary
