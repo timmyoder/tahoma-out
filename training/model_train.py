@@ -8,8 +8,8 @@ from config import PHOTOS_DIR, MODELS_DIR, MODEL_LOG
 
 mlflow.tensorflow.autolog()
 
-image_size = (128, 256)
-batch_size = 32
+image_size = (64, 128)
+batch_size = 16
 dataset_options = {'directory': PHOTOS_DIR,
                    'labels': 'inferred',
                    'label_mode': 'int',
@@ -78,51 +78,53 @@ def train_simple_sequential():
 
 
 def train_cnn():
-    model = tf.keras.models.Sequential([
-        layers.experimental.preprocessing.Resizing(*image_size),
-        layers.experimental.preprocessing.Rescaling(1./255),
-        layers.Conv2D(64, 7, strides=2, activation='relu',
-                      padding='same', input_shape=[*image_size, 3]),
-        layers.MaxPool2D(2),
-        layers.Conv2D(128, 3, activation='relu', padding='same'),
-        layers.Conv2D(128, 3, activation='relu', padding='same'),
-        layers.MaxPool2D(2),
-        layers.Conv2D(256, 3, activation='relu', padding='same'),
-        layers.Conv2D(256, 3, activation='relu', padding='same'),
-        layers.MaxPool2D(2),
-        layers.Flatten(),
-        layers.Dense(128, activation='relu'),
-        layers.Dropout(0.5),
-        layers.Dense(64, activation='relu'),
-        layers.Dropout(0.5),
-        layers.Dense(4, activation='softmax')
-    ])
+    with mlflow.start_run():
+        mlflow.log_param("image_size", image_size)
+        model = tf.keras.models.Sequential([
+            layers.experimental.preprocessing.Resizing(*image_size),
+            layers.experimental.preprocessing.Rescaling(1./255),
+            layers.Conv2D(64, 7, strides=2, activation='relu',
+                          padding='same', input_shape=[*image_size, 3]),
+            layers.MaxPool2D(2),
+            layers.Conv2D(128, 3, activation='relu', padding='same'),
+            layers.Conv2D(128, 3, activation='relu', padding='same'),
+            layers.MaxPool2D(2),
+            layers.Conv2D(256, 3, activation='relu', padding='same'),
+            layers.Conv2D(256, 3, activation='relu', padding='same'),
+            layers.MaxPool2D(2),
+            layers.Flatten(),
+            layers.Dense(128, activation='relu'),
+            layers.Dropout(0.5),
+            layers.Dense(64, activation='relu'),
+            layers.Dropout(0.5),
+            layers.Dense(4, activation='softmax')
+        ])
 
-    model.compile(loss='sparse_categorical_crossentropy',
-                  optimizer='sgd',
-                  metrics=['accuracy'])
+        model.compile(loss='sparse_categorical_crossentropy',
+                      optimizer='sgd',
+                      metrics=['accuracy'])
 
-    model_path = MODELS_DIR / 'simple_cnn_weighted.h5'
-    early_stopping_cb = tf.keras.callbacks.EarlyStopping(patience=8)
-    model_checkpoint_cb = tf.keras.callbacks.ModelCheckpoint(model_path,
-                                                             save_best_only=True)
-    run_index = 3  # increment every time you train the model
-    run_logdir = MODEL_LOG / f'simple_cnn_run_{run_index}'
-    tensorboard_cb = tf.keras.callbacks.TensorBoard(run_logdir)
-    callbacks = [early_stopping_cb,
-                 model_checkpoint_cb,
-                 tensorboard_cb
-                 ]
+        model_path = MODELS_DIR / 'simple_cnn_weighted_small.h5'
+        early_stopping_cb = tf.keras.callbacks.EarlyStopping(patience=8)
+        model_checkpoint_cb = tf.keras.callbacks.ModelCheckpoint(model_path,
+                                                                 save_best_only=True)
+        run_index = 4  # increment every time you train the model
+        run_logdir = MODEL_LOG / f'simple_cnn_run_{run_index}'
+        tensorboard_cb = tf.keras.callbacks.TensorBoard(run_logdir)
+        callbacks = [early_stopping_cb,
+                     model_checkpoint_cb,
+                     tensorboard_cb
+                     ]
 
-    class_weights = {0: 2.48,
-                     1: 1.2,
-                     2: 1.,
-                     3: 1.2}
+        class_weights = {0: 2.48,
+                         1: 1.2,
+                         2: 1.,
+                         3: 1.2}
 
-    history = model.fit(train_ds, epochs=20, class_weight=class_weights,
-                        validation_data=val_ds, callbacks=callbacks)
+        history = model.fit(train_ds, epochs=20, class_weight=class_weights,
+                            validation_data=val_ds, callbacks=callbacks)
 
-    return history, model
+        return history, model
 
 
 hist, mod = train_cnn()
