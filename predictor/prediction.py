@@ -22,7 +22,7 @@ class Predictor:
         self.winner = None
 
     def load_image(self):
-        image = load_img(self.current_image)
+        image = load_img(self.current_image, target_size=(256, 256))
         input_arr = img_to_array(image)
         self.current_image_array = np.array([input_arr])  # Convert single image to a batch.
 
