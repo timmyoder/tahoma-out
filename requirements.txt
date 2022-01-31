@@ -3,14 +3,12 @@ matplotlib
 pydot
 graphviz
 django~=3.0
-
 psycopg2~=2.8.5
 whitenoise
 gunicorn
-# dj-database-url
-# django-redis-cache
-
+dj-database-url
+django-redis-cache
 loguru
-
 djangorestframework
 mlflow
+cloudinary

@@ -38,8 +38,8 @@ def render_live(request):
 
 
 def home(request):
-    # return render_live(request)
-    return render_random(request)
+    return render_live(request)
+    # return render_random(request)
 
 
 def sources(request):

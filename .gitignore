@@ -2,7 +2,10 @@
 .idea/
 photos/
 data/
-models/
+models/*
+!models/production
+
+secrets.txt
 
 .DS_Store
 
