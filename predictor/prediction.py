@@ -11,7 +11,7 @@ class Predictor:
                  image=MEDIA_DIR / 'dne.png'):
         self.prediction = None
         self.model_name = model_name
-        self.model = load_model(MODELS_DIR / self.model_name)
+        self.model = load_model(MODELS_DIR / 'production' / self.model_name)
         self.current_image = image
         self.current_image_array = None
         self.labels = ['All the way out',

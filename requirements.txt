@@ -1,5 +1,4 @@
-tensorflow>=2.4
-matplotlib
+tensorflow-cpu
 pydot
 graphviz
 django~=3.0
@@ -10,5 +9,8 @@ dj-database-url
 django-redis-cache
 loguru
 djangorestframework
-mlflow
 cloudinary
+
+# for training, not needed for deployment
+# tensorflow<=2.4
+# mlflow

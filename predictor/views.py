@@ -7,7 +7,7 @@ import shutil
 from config import PHOTOS_DIR, MEDIA_DIR
 from training.retrieve_pics import get_current_image
 
-model = 'simple_cnn_weighted.h5'
+model = 'simple_cnn_weighted_small.h5'
 
 
 def render_random(request):
