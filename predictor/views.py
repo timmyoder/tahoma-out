@@ -5,7 +5,7 @@ import numpy as np
 import shutil
 
 from config import PHOTOS_DIR, MEDIA_DIR
-from retrieve_pics import get_current_image
+from training.retrieve_pics import get_current_image
 
 model = 'simple_cnn_weighted.h5'
 
