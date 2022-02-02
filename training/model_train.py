@@ -8,14 +8,23 @@ from config import PHOTOS_DIR, MODELS_DIR, MODEL_LOG
 
 mlflow.tensorflow.autolog()
 
-image_size = (64, 128)
+original_image_size = (563, 1000)
+resize_image_size = (64, 128)
+mobile_net_image_size = (128, 128)
 batch_size = 16
+
+class_weights = {0: 2.48,
+                 1: 1.2,
+                 2: 1.,
+                 3: 1.2}
+
 dataset_options = {'directory': PHOTOS_DIR,
                    'labels': 'inferred',
                    'label_mode': 'int',
                    'validation_split': 0.2,
                    'seed': 1337,
-                   'batch_size': batch_size}
+                   'batch_size': batch_size,
+                   'image_size': original_image_size}
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     subset="training",
@@ -79,12 +88,12 @@ def train_simple_sequential():
 
 def train_cnn():
     with mlflow.start_run():
-        mlflow.log_param("image_size", image_size)
+        mlflow.log_param("image_size", resize_image_size)
         model = tf.keras.models.Sequential([
-            layers.experimental.preprocessing.Resizing(*image_size),
-            layers.experimental.preprocessing.Rescaling(1./255),
+            layers.experimental.preprocessing.Resizing(*resize_image_size),
+            layers.experimental.preprocessing.Rescaling(1. / 255),
             layers.Conv2D(64, 7, strides=2, activation='relu',
-                          padding='same', input_shape=[*image_size, 3]),
+                          padding='same', input_shape=[*resize_image_size, 3]),
             layers.MaxPool2D(2),
             layers.Conv2D(128, 3, activation='relu', padding='same'),
             layers.Conv2D(128, 3, activation='relu', padding='same'),
@@ -108,18 +117,13 @@ def train_cnn():
         early_stopping_cb = tf.keras.callbacks.EarlyStopping(patience=8)
         model_checkpoint_cb = tf.keras.callbacks.ModelCheckpoint(model_path,
                                                                  save_best_only=True)
-        run_index = 4  # increment every time you train the model
+        run_index = 5  # increment every time you train the model
         run_logdir = MODEL_LOG / f'simple_cnn_run_{run_index}'
         tensorboard_cb = tf.keras.callbacks.TensorBoard(run_logdir)
         callbacks = [early_stopping_cb,
                      model_checkpoint_cb,
                      tensorboard_cb
                      ]
-
-        class_weights = {0: 2.48,
-                         1: 1.2,
-                         2: 1.,
-                         3: 1.2}
 
         history = model.fit(train_ds, epochs=20, class_weight=class_weights,
                             validation_data=val_ds, callbacks=callbacks)
