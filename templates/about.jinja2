@@ -1,0 +1,113 @@
+{% extends 'base.jinja2' %}
+
+{% block subtitle %}
+     <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+        <br/>
+        <h2>About the project</h2>
+      </div>
+    </div>
+     </div>
+{% endblock subtitle %}
+
+{% block content %}
+
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+          <ul>
+            <li>You can find the source code for the project at <a href=https://github.com/timmyoder/tahoma-out>my Github</a>. The same link is in the menu bar as well.</li>
+              <li>The images come from the <a href="https://www.king5.com/webcams">King 5 waterfront webcam</a>. I pulled about 10k images from the cam over the course of 2020-2021.</li>
+              <li>I manually labeled the images using the <a href="https://github.com/robertbrada/PyQt-image-annotation-tool">PyQt image annotation tool</a>, which made the process much more bearable. </li>
+              <li>I built and trained a whole pile of different convolutional neural networks (CNNs) and tested which ones performed the best. </li>
+              <li>The currently deployed model is using the <a href="https://arxiv.org/abs/1801.04381">MobileNetV2</a> model as a base model which was pre-trained on the imagenet dataset.
+                  I used transfer learning to adapt the model to my training dataset. Further fine-tuning the model brought the top 1 accuracy up to the low 90s. </li>
+              <li>I suspect the difficulty of the task for the model primarily comes from my labeling, particularly of the two intermediate classes ('Bottom out' and 'Just the tip').
+                  There are MANY boundary cases that could fall into any of the four classes (see below for an example). The subjectivity of the labels really confusing the model.
+              </li>
+          </ul>
+      </div>
+    </div>
+ <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1 row" style="-webkit-justify-content: space-around; justify-content: space-around;">
+        <div class="col-lg">
+        <figure><img src="{{ MEDIA_URL }}history.png" alt="Training history" />
+          <figcaption>Training history for the MobileNetV2-based model</figcaption>
+        </figure>
+        </div>
+        <div class="col-lg">
+          <figure><img src="{{ MEDIA_URL }}model_summary.png" alt="Model Summary" />
+          <figcaption>Model architecture for the MobileNetV2-based model</figcaption>
+        </figure>
+            <p>The labmda layer here is part of the preprocessing layers of the model.
+                The downloaded image size is 563 x 1000, but the MobileNetV2 architecture is expecting square images.
+                I used the pre-trained weights for 128 x 128 images.
+                I found that just resizing the original photo to a square aspect ratio hurt the model's performance.
+                Instead, I first resize the image to 64 x 128 which is roughly the same aspect ratio as the original.
+                I then used the Tensorflow image processing function resize_with_padding that can pad the image to a target height and width.
+                That way I could use the pre-trained weights without distorting the original image.
+                I messed around with various image sizes, and 128 x 128 gave a good mix between model size and accuracy.
+                Handling the image processing as layers in the model makes it much more flexible and requires no preprocessing of the prediction image.
+            </p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+        <h2>Confusing classes<small>Subjectivity in labeling </small></h2>
+        <p>This is where I will show a few different examples of the target classes. One where the distinction is obvious and one where they are all so close. How do you think you would have labeled these images below? </p><br/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1 row" style="-webkit-justify-content: space-around; justify-content: space-around;">
+        <div class="card large">
+          <img src="{{ MEDIA_URL }}all_the_way_clear.png" class="section media" alt="money shot">
+          <p class="section double-padded">All the way out. This city is gorgeous.</p>
+        </div>
+          <div class="card large">
+          <img src="{{ MEDIA_URL }}tip_clear.png" class="section media" alt="tips">
+          <p class="section double-padded">Just the tip peaking out</p>
+        </div>
+          <div class="card large">
+          <img src="{{ MEDIA_URL }}bottom_clear.png" class="section media" alt="buttoms up">
+          <p class="section double-padded">Bottoms only</p>
+        </div>
+          <div class="card large">
+          <img src="{{ MEDIA_URL }}none_clear.png" class="section media" alt="Nope">
+          <p class="section double-padded">Not out</p>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+        <p>And here is a case where the distinction isn't so clear. Stare at these long enough and close enough, and I bet you can convince yourself </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1 row" style="-webkit-justify-content: space-around; justify-content: space-around;">
+        <div class="card large">
+          <img src="{{ MEDIA_URL }}all_the_way_confusing.png" class="section media" alt="money shot">
+          <p class="section double-padded">All the way out, maybe?</p>
+        </div>
+          <div class="card large">
+          <img src="{{ MEDIA_URL }}tip_confusing.png" class="section media" alt="tips">
+          <p class="section double-padded">I can see it if I squint</p>
+        </div>
+          <div class="card large">
+          <img src="{{ MEDIA_URL }}bottom_confusing.png" class="section media" alt="buttoms up">
+          <p class="section double-padded">Are those foothills, or is the snow just blending into the clouds</p>
+        </div>
+          <div class="card large">
+          <img src="{{ MEDIA_URL }}none_confusing.png" class="section media" alt="Nope">
+          <p class="section double-padded">Not out, or is it?</p>
+        </div>
+
+      </div>
+
+      </div>
+    </div>
+{% endblock content %}
+
