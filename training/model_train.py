@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow import image
 from tensorflow.keras import layers
 from tensorflow.keras.applications import MobileNetV3Large, MobileNetV2, NASNetMobile
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 import mlflow
 
