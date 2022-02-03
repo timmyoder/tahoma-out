@@ -8,37 +8,18 @@ import matplotlib.pyplot as plt
 import mlflow
 
 from config import PHOTOS_DIR, MODELS_DIR, MODEL_LOG, LOGS
+from training.image_sizes import original_image_size, resize_image_size, mobile_net_image_size
 
 FIG_DIR = LOGS / 'figures'
 
 mlflow.tensorflow.autolog()
 
-original_image_size = (563, 1000)
-resize_image_size = (64, 128)
-mobile_net_image_size = (128, 128)
 batch_size = 16
 
 class_weights = {0: 2.48,
                  1: 1.2,
                  2: 1.,
                  3: 1.2}
-
-dataset_options = {'directory': PHOTOS_DIR,
-                   'labels': 'inferred',
-                   'label_mode': 'int',
-                   'validation_split': 0.2,
-                   'seed': 1337,
-                   'batch_size': batch_size,
-                   'image_size': original_image_size}
-
-train_ds = tf.keras.preprocessing.image_dataset_from_directory(
-    subset="training",
-    **dataset_options
-)
-val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-    subset="validation",
-    **dataset_options
-)
 
 
 def plot_rand_images(square_num_pics):
@@ -55,10 +36,6 @@ def plot_rand_images(square_num_pics):
             ax.imshow(images[i].numpy().astype("uint8"))
             ax.set_title(int(labels[i]))
             plt.axis("off")
-
-
-train_ds = train_ds.prefetch(buffer_size=32)
-val_ds = val_ds.prefetch(buffer_size=32)
 
 
 def mobilenet_transfer_learning(mobel_net):
@@ -209,5 +186,23 @@ def plot_history(accuracy, val_accuracy, loss, val_loss, initial_epochs):
 
 
 if __name__ == '__main__':
+    dataset_options = {'directory': PHOTOS_DIR,
+                       'labels': 'inferred',
+                       'label_mode': 'int',
+                       'validation_split': 0.2,
+                       'seed': 1337,
+                       'batch_size': batch_size,
+                       'image_size': original_image_size}
+
+    train_ds = tf.keras.preprocessing.image_dataset_from_directory(
+        subset="training",
+        **dataset_options)
+    val_ds = tf.keras.preprocessing.image_dataset_from_directory(
+        subset="validation",
+        **dataset_options)
+
+    train_ds = train_ds.prefetch(buffer_size=32)
+    val_ds = val_ds.prefetch(buffer_size=32)
+
     # hist, mod = train_cnn()
     hist, mode = mobilenet_transfer_learning(MobileNetV2)
