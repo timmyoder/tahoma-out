@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+from tensorflow import image
 from tensorflow.keras import layers
 from tensorflow.keras.applications import MobileNetV3Large, MobileNetV2, NASNetMobile
 import matplotlib.pyplot as plt
@@ -68,16 +69,16 @@ def mobilenet_transfer_learning(mobel_net):
 
     dropout_rate = .2
 
-    inputs = tf.keras.Input(shape=(*original_image_size, 3))
+    inputs = layers.Input(shape=(*original_image_size, 3))
     x = layers.experimental.preprocessing.Resizing(*resize_image_size)(inputs)
-    x = layers.Lambda(lambda xx: tf.image.resize_with_pad(xx, *mobile_net_image_size,
-                                                          method='bilinear',
-                                                          antialias=False))(x)
+    x = layers.Lambda(lambda xx: image.resize_with_pad(xx, *mobile_net_image_size,
+                                                       method='bilinear',
+                                                       antialias=False))(x)
     x = layers.experimental.preprocessing.Rescaling(1. / 255)(x)
     x = base_model(x, training=False)
     x = layers.GlobalAveragePooling2D()(x)
     x = tf.keras.layers.Dropout(dropout_rate)(x)
-    outputs = layers.Dense(4)(x)
+    outputs = layers.Dense(4, activation='softmax')(x)
     model = tf.keras.Model(inputs, outputs)
 
     base_learning_rate = 0.0001
