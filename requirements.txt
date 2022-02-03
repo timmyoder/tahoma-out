@@ -12,7 +12,8 @@ django-heroku
 loguru
 djangorestframework
 cloudinary
+mlflow
+matplotlib
 
 # for training, not needed for deployment
 # tensorflow<=2.4
-# mlflow
