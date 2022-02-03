@@ -4,7 +4,7 @@ from tensorflow import image
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
-from training.model_train import mobile_net_image_size, resize_image_size
+from training.image_sizes import mobile_net_image_size, resize_image_size
 
 from config import MODELS_DIR, MEDIA_DIR
 
