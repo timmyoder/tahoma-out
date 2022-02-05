@@ -6,6 +6,7 @@ photos/
 data/
 models/*
 !models/production
+!models/lite
 
 mlruns/
 
