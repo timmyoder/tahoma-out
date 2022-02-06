@@ -1,16 +1,13 @@
 import datetime as dt
 
-import cloudinary
 import cloudinary.uploader as uploader
 
 from predictor.models import Photo
 from training.retrieve_pics import get_current_image
 from config import MEDIA_DIR
 from predictor.prediction import Predictor
-from tahoma_tracker.secrets import cloudinary_config
 
 LIVE_MODEL = 'mobilenetV2_fine_tuned.h5'
-cloudinary.config(**cloudinary_config)
 
 
 class Archiver(Predictor):

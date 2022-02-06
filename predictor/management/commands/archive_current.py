@@ -6,6 +6,6 @@ from predictor.archiver import Archiver
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        # load NYT deaths and cases
+        # pull down live picture and store prediction to database
         archiver = Archiver()
         archiver.archive()

@@ -17,7 +17,7 @@
     <div class="row">
       <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
       <div class="col-sm">
-        <figure><img src="{{ MEDIA_URL }}{{ image }}" alt="King5 waterfront webcam" />
+        <figure><img src="{{ photo_model.image.url }}" alt="King5 waterfront webcam" />
           <figcaption>Last image pulled from the waterfront webcam</figcaption>
         </figure>
       </div>
@@ -26,13 +26,13 @@
 
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-        <h2>I think it is: {{ predictor.winner}}</h2>
+        <h2>I think it is: {{ photo_model.winner}}</h2>
         <p>Probabilities</p>
           <ul>
-              <li>All the way out: {{ predictor.formatted_predictions.0}}</li>
-              <li>Bottom out: {{ predictor.formatted_predictions.1 }}</li>
-              <li>Only the tip is out: {{ predictor.formatted_predictions.3 }}</li>
-              <li>Not out: {{ predictor.formatted_predictions.2 }}</li>
+              <li>All the way out: {{ formatted_predictions.0}}</li>
+              <li>Bottom out: {{ formatted_predictions.1 }}</li>
+              <li>Only the tip is out: {{ formatted_predictions.3 }}</li>
+              <li>Not out: {{ formatted_predictions.2 }}</li>
           </ul>
       </div>
     </div>

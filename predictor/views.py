@@ -1,45 +1,18 @@
 from django.shortcuts import render
-from predictor.prediction import Predictor
 
-import numpy as np
-import shutil
-
-from config import PHOTOS_DIR, MEDIA_DIR
-from training.retrieve_pics import get_current_image
-
-model = 'mobilenetV2_fine_tuned.h5'
-
-
-def render_random(request):
-    all_pics = [pic for pic in PHOTOS_DIR.rglob('*.png')]
-
-    rand_choice = np.random.choice(all_pics)
-    rand_pic = MEDIA_DIR / 'random_picture.png'
-
-    shutil.copy(str(rand_choice), str(rand_pic))
-
-    predictor = Predictor(model_name=model, prediction_image=rand_pic)
-    predictor.load_image()
-    predictor.predict()
-
-    return render(request, 'home.jinja2', {'image': rand_pic.name,
-                                           "predictor": predictor})
-
-
-def render_live(request):
-    get_current_image()
-    live_im = MEDIA_DIR / 'live.png'
-    predictor = Predictor(model_name=model, prediction_image=live_im)
-    predictor.load_image()
-    predictor.predict()
-
-    return render(request, 'home.jinja2', {'image': live_im.name,
-                                           "predictor": predictor})
+from predictor.models import Photo
 
 
 def home(request):
-    return render_live(request)
-    # return render_random(request)
+    latest_prediction = Photo.objects.latest('id')
+
+    predictions = [latest_prediction.pred_all,
+                   latest_prediction.pred_base,
+                   latest_prediction.pred_none,
+                   latest_prediction.pred_tip]
+    formatted_prediction = [f'{p*100:.2f}%' for p in predictions]
+    return render(request, 'home.jinja2', {'photo_model': latest_prediction,
+                                           'formatted_predictions': formatted_prediction})
 
 
 def about(request):

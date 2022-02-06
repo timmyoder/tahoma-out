@@ -11,8 +11,6 @@ models/*
 
 mlruns/
 
-tahoma_tracker/secrets.py
-
 .DS_Store
 
 # Byte-compiled / optimized / DLL files
