@@ -14,7 +14,6 @@ import os
 from django.template.context_processors import media
 import django_heroku
 
-
 APP_URL = 'https://murmuring-castle-50506.herokuapp.com/'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -131,3 +130,5 @@ MEDIA_URL = '/media/'
 django_heroku.settings(locals())
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
