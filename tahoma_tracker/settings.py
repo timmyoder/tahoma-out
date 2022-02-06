@@ -14,6 +14,8 @@ import os
 from django.template.context_processors import media
 import django_heroku
 
+from tahoma_tracker.secrets import cloudinary_config
+
 APP_URL = 'https://murmuring-castle-50506.herokuapp.com/'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -40,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'predictor.apps.PredictorConfig',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -126,3 +130,6 @@ MEDIA_URL = '/media/'
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
+
+CLOUDINARY_STORAGE = cloudinary_config
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

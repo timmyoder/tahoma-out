@@ -1,6 +1,8 @@
 # pycharm stuff
 .idea/
 
+secret_key.txt
+password.txt
 logs/
 photos/
 data/
@@ -9,7 +11,7 @@ models/*
 
 mlruns/
 
-secrets.txt
+tahoma_tracker/secrets.py
 
 .DS_Store
 

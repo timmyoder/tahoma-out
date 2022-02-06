@@ -12,6 +12,7 @@ django-heroku
 loguru
 djangorestframework
 cloudinary
+dj3-cloudinary-storage
 
 # for training, not needed for deployment
 # tensorflow<=2.4
