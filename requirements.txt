@@ -1,5 +1,4 @@
 tflite-runtime
-tflit
 Pillow
 pydot
 graphviz
