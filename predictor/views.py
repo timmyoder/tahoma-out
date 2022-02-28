@@ -1,6 +1,9 @@
 from django.shortcuts import render
 
+from django.utils.timezone import make_aware
+
 from predictor.models import Photo
+from predictor.forms import SpecificDateForm
 
 
 def home(request):
@@ -24,7 +27,25 @@ def stats(request):
 
 
 def archive(request):
-    return render(request, 'archive.jinja2')
+    context = {}
+    if request.method == 'POST':
+        form = SpecificDateForm(request.POST)
+        if form.is_valid():
+            date = form.cleaned_data['display_date']
+            import datetime as dt
+            date = dt.datetime(date.year, date.month, date.day)
+            aware_date = make_aware(date)
+            results = Photo.objects.filter(datetime__year=aware_date.year,
+                                           datetime__month=aware_date.month,
+                                           datetime__day=aware_date.day)
+            context.update({'results': results})
+
+    else:
+        form = SpecificDateForm()
+
+    context['form'] = form
+
+    return render(request, 'archive.jinja2', context)
 
 
 def api(request):

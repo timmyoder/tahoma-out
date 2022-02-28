@@ -6,6 +6,7 @@
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
         <br/>
         <h2>Archive <small>Look back at previous predictions</small></h2>
+          <p>Use the form below to view all photos and predictions from a given day</p>
       </div>
     </div>
          </div>
@@ -13,12 +14,29 @@
 {% endblock subtitle %}
 
 {% block content %}
+
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-          <ul>
-              <li>Calendar selector for dates</li>
-              <li>Display pictures and prediction, model info?</li>
-          </ul>
+          <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Submit">
+            </form>
       </div>
     </div>
+
+    {% for photo in results %}
+        <div class="row">
+          <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
+                <div class="col-sm">
+                    <figure><img src="{{ photo.image.url }}" alt="King5 waterfront webcam" />
+                      <figcaption>Photo pulled {{photo.datetime}}. Model prediction: {{photo.winner}}</figcaption>
+                    </figure>
+                 </div>
+          <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
+        </div>
+
+    {% endfor %}
+
+    <br>
 {% endblock content %}
