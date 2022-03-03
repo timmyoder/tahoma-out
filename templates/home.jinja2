@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
         <br/>
-        <h2>Is She out <small>Can you see Mt. Rainier from Seattle? </small></h2>
+        <h2>Is She out? <small>Can you see Mt. Tahoma from Seattle? </small></h2>
       </div>
     </div>
          </div>
@@ -27,13 +27,15 @@
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
         <h2>I think it is: {{ photo_model.winner}}</h2>
-        <p>Probabilities</p>
+        <p>Prediction confidence:</p>
           <ul>
               <li>All the way out: {{ formatted_predictions.0}}</li>
               <li>Bottom out: {{ formatted_predictions.1 }}</li>
               <li>Only the tip is out: {{ formatted_predictions.3 }}</li>
               <li>Not out: {{ formatted_predictions.2 }}</li>
           </ul>
+
+          <p>Check out the <a href="{% url 'about' %}">About page</a> for more info.</p>
       </div>
     </div>
 
