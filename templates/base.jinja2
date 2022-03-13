@@ -31,7 +31,7 @@
     <a href="{%url "api"%}"><h4 style="margin-left: 0;">API</h4></a>
     <a href={%url "about"%}><h4 style="margin-left: 0;">About</h4></a>
 </nav>
-	<h1>{% block subtitle %} {% endblock subtitle %}</h1>
+	{% block subtitle %} {% endblock subtitle %}
 	{% block content %} {% endblock content %}
 </body>
 </html>
