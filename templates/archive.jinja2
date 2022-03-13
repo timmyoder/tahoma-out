@@ -24,19 +24,32 @@
             </form>
       </div>
     </div>
+    {% if results %}
+            {% if results == 3.14 %}
+                <div class="container">
+                    <div class="row">
+                      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+                        <br/>
+                          <p>There are no photos in the date range selected.
+                              The first photo stored on this site was on 2022-02-06 at 6:38 pm. </p>
+                      </div>
+                    </div>
+                </div>
+        {% else %}
+        {% for photo in results %}
+            <div class="row">
+              <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
+                    <div class="col-sm">
+                        <figure><img src="{{ photo.image.url }}" alt="King5 waterfront webcam" />
+                          <figcaption>Photo pulled {{photo.datetime}}. Model prediction: {{photo.winner}}</figcaption>
+                        </figure>
+                     </div>
+            </div>
 
-    {% for photo in results %}
-        <div class="row">
-          <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
-                <div class="col-sm">
-                    <figure><img src="{{ photo.image.url }}" alt="King5 waterfront webcam" />
-                      <figcaption>Photo pulled {{photo.datetime}}. Model prediction: {{photo.winner}}</figcaption>
-                    </figure>
-                 </div>
-          <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
-        </div>
+        {% endfor %}
+           {% endif %}
 
-    {% endfor %}
+    {% endif %}
 
     <br>
 {% endblock content %}

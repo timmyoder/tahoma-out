@@ -1,9 +1,10 @@
-from django.shortcuts import render
+import datetime as dt
 
+from django.shortcuts import render
 from django.utils.timezone import make_aware
 
 from predictor.models import Photo
-from predictor.forms import SpecificDateForm
+from predictor.forms import ExampleForm
 
 
 def home(request):
@@ -29,19 +30,33 @@ def stats(request):
 def archive(request):
     context = {}
     if request.method == 'POST':
-        form = SpecificDateForm(request.POST)
+        form = ExampleForm(request.POST)
         if form.is_valid():
             date = form.cleaned_data['display_date']
-            import datetime as dt
-            date = dt.datetime(date.year, date.month, date.day)
-            aware_date = make_aware(date)
-            results = Photo.objects.filter(datetime__year=aware_date.year,
-                                           datetime__month=aware_date.month,
-                                           datetime__day=aware_date.day)
+            start_time = form.cleaned_data['start_time']
+            end_time = form.cleaned_data['end_time']
+
+            if start_time is None:
+                start_dt = dt.datetime(date.year, date.month, date.day)
+            else:
+                start_dt = dt.datetime.combine(date, start_time)
+
+            if end_time is None:
+                end_dt = dt.datetime(date.year, date.month, date.day + 1)
+            else:
+                end_dt = dt.datetime(date.year, date.month, date.day, end_time.hour)
+
+            aware_start_dt = make_aware(start_dt)
+            aware_end_dt = make_aware(end_dt)
+            results = Photo.objects.filter(datetime__gte=aware_start_dt,
+                                           datetime__lte=aware_end_dt
+                                           )
+            if len(results) == 0:
+                results = 3.14
             context.update({'results': results})
 
     else:
-        form = SpecificDateForm()
+        form = ExampleForm()
 
     context['form'] = form
 
