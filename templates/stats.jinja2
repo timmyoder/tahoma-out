@@ -13,12 +13,24 @@
 {% endblock subtitle %}
 
 {% block content %}
+{#    <div class="row">#}
+{#      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">#}
+{#          <ul>#}
+{#              <li>Zoomable graph of time series outness %</li>#}
+{#              <li>best day/week/month</li>#}
+{#          </ul>#}
+{#      </div>#}
+{#    </div>#}
+
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-          <ul>
-              <li>Zoomable graph of time series outness %</li>
-              <li>best day/week/month</li>
-          </ul>
+        <h3>When was she out last?</h3>
+        <div class="card large">
+          <img src="{{ stats.last_out.image.url }}" class="section media" alt="Last out">
+            <p class="section double-padded">The last time She was "All the way out."
+                        <br>Photo pulled {{stats.last_out.datetime}}</p>
+        </div>
       </div>
     </div>
+
 {% endblock content %}

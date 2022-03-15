@@ -5,6 +5,7 @@ from django.utils.timezone import make_aware
 
 from predictor.models import Photo
 from predictor.forms import ExampleForm
+from predictor.stats_server import Stats
 
 
 def home(request):
@@ -24,7 +25,8 @@ def about(request):
 
 
 def stats(request):
-    return render(request, 'stats.jinja2')
+    statistics = Stats()
+    return render(request, 'stats.jinja2', {'stats': statistics})
 
 
 def archive(request):
