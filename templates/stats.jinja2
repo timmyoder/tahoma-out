@@ -25,12 +25,41 @@
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
         <h3>When was she out last?</h3>
-        <div class="card large">
-          <img src="{{ stats.last_out.image.url }}" class="section media" alt="Last out">
-            <p class="section double-padded">The last time She was "All the way out."
+        <div class="col-sm-5">
+            <img src="{{ stats.last_out.image.url }}" alt="Last out" class="slider-img">
+            <p id="slider_label" class="section double-padded">
+                The last time She was "All the way out."
                         <br>Photo pulled {{stats.last_out.datetime}}</p>
+                    <button class="btn" onclick="prev()">Previous Time</button>
+                    <button class="btn" onclick="next()">Next Time</button>
+
         </div>
       </div>
     </div>
 
+<!-- previous and next button cod -->
+<script>
+    let slider_img = document.querySelector('.slider-img');
+    let images = {{stats.image_urls|safe}};
+    let labels = {{ stats.labels|safe }};
+    let i = 0;
+
+    function prev(){
+        if(i <= 0) i = images.length;
+        i--;
+        return setImg();
+    }
+
+    function next(){
+        if(i >= images.length-1) i = -1;
+        i++;
+        return setImg();
+    }
+
+    function setImg(){
+        document.getElementById("slider_label").innerHTML = labels[i];
+        return slider_img.setAttribute('src', images[i]);
+
+    }
+</script>
 {% endblock content %}
