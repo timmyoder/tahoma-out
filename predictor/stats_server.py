@@ -1,4 +1,5 @@
 from pytz import timezone
+import pandas as pd
 
 from predictor.models import Photo
 
@@ -23,14 +24,14 @@ class Stats:
         self.most_out()
 
     def most_out(self):
-        out_by_day = Photo.objects.raw('select id, count(id) as "winner_count", '
-                                       'date(datetime) as max_date '
-                                       'from "predictor_photo" '
-                                       'where winner=\'All the way out\' '
-                                       'group by max_date '
-                                       'order by winner_count desc')[0]
-        self.max_out_date = out_by_day.max_date
-        max_out_count = out_by_day.winner_count
+        query = Photo.objects.filter(winner='Not out')
+        all_winners = pd.DataFrame.from_records(query.values())
+        all_winners['date'] = pd.to_datetime(all_winners['datetime']).dt.date
+
+        out_by_day = all_winners.groupby('date').count()
+
+        self.max_out_date = out_by_day.index[out_by_day['id'].argmax()]
+        max_out_count = out_by_day.loc[self.max_out_date, 'id']
         max_out_total_minutes = max_out_count * 10
         max_out_hours = max_out_total_minutes // 60
         if max_out_hours < 1:
@@ -49,11 +50,6 @@ class Stats:
         self.max_out_time = f"{hrs_str}{min_str}"
 
 
-
-
 if __name__ == '__main__':
 
     s = Stats()
-    s.most_out()
-    print(s.max_out_date)
-    print(s.max_out_time)
