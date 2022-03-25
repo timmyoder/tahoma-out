@@ -23,8 +23,8 @@ class Stats:
         self.most_out()
 
     def most_out(self):
-        out_by_day = Photo.objects.raw('select id, date(datetime) as max_date, '
-                                       'count(winner) as "winner_count" '
+        out_by_day = Photo.objects.raw('select count(id) as "winner_count", '
+                                       'date(datetime) as max_date '
                                        'from "predictor_photo" '
                                        'where winner=\'All the way out\' '
                                        'group by max_date '
