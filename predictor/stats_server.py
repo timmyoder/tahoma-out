@@ -26,7 +26,7 @@ class Stats:
         out_by_day = Photo.objects.raw('select id, date(datetime) as max_date, '
                                        'count(winner) as "winner_count" '
                                        'from "predictor_photo" '
-                                       'where winner="All the way out" '
+                                       'where winner=\'All the way out\' '
                                        'group by max_date '
                                        'order by winner_count desc')[0]
         self.max_out_date = out_by_day.max_date
