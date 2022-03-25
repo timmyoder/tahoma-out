@@ -13,6 +13,7 @@ loguru
 djangorestframework
 cloudinary
 dj3-cloudinary-storage
+pandas
 
 # for training, not needed for deployment
 # tensorflow<=2.4

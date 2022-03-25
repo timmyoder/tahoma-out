@@ -24,7 +24,7 @@ class Stats:
         self.most_out()
 
     def most_out(self):
-        query = Photo.objects.filter(winner='Not out')
+        query = Photo.objects.filter(winner='All the way out')
         all_winners = pd.DataFrame.from_records(query.values())
         all_winners['date'] = pd.to_datetime(all_winners['datetime']).dt.date
 
