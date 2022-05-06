@@ -1,9 +1,11 @@
 import datetime as dt
 
 import cloudinary.uploader as uploader
+from PIL import Image
 
 from predictor.models import Photo
 from training.retrieve_pics import get_current_image
+from training.image_sizes import original_image_size
 from config import MEDIA_DIR
 from predictor.prediction import Predictor
 
@@ -11,16 +13,24 @@ LIVE_MODEL = 'mobilenetV2_fine_tuned.h5'
 
 
 class Archiver(Predictor):
-    def __init__(self, model_name=LIVE_MODEL, image=MEDIA_DIR / 'live.png'):
+    def __init__(self, model_name=LIVE_MODEL, image=MEDIA_DIR / 'live.png',
+                 output_im_size=original_image_size):
         super().__init__(model_name=model_name, prediction_image=image)
+        self.output_im_size = output_im_size
 
     def load_and_predict(self):
         self.load_image()
         self.predict()
 
-    @staticmethod
-    def update_image():
+    def update_image(self):
         get_current_image()
+        self.resize_image()
+
+    def resize_image(self):
+        im = Image.open(self.current_image)
+        height, width = self.output_im_size
+        new_image = im.resize((width, height))
+        new_image.save(self.current_image)
 
     def upload_prediction(self):
         minute = dt.datetime.now().minute
