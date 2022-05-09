@@ -1,6 +1,6 @@
 # Tahoma Tracker - Is She out?
 
-https://murmuring-castle-50506.herokuapp.com/
+https://www.tahomatracker.com/
 
 
 A website that tells you if Tahoma (aka Mt. Rainier) is out. If 'She out', the mountain is visible from downtown Seattle. 
