@@ -10,7 +10,7 @@ DATABASES = {
 
 DEBUG = False
 TEMPLATE_DEBUG = False
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 ALLOWED_HOSTS = ["*"]
 
