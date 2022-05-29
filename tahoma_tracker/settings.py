@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'predictor.apps.PredictorConfig',
     'cloudinary_storage',
     'cloudinary',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -132,3 +133,8 @@ django_heroku.settings(locals())
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}

@@ -3,9 +3,14 @@ import datetime as dt
 from django.shortcuts import render
 from django.utils.timezone import make_aware
 
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
 from predictor.models import Photo, Plot
 from predictor.forms import ExampleForm
 from predictor.stats_server import Stats
+from predictor.serializers import PredictionSerializer
 
 
 def home(request):
@@ -15,7 +20,7 @@ def home(request):
                    latest_prediction.pred_base,
                    latest_prediction.pred_none,
                    latest_prediction.pred_tip]
-    formatted_prediction = [f'{p*100:.2f}%' for p in predictions]
+    formatted_prediction = [f'{p * 100:.2f}%' for p in predictions]
     return render(request, 'home.jinja2', {'photo_model': latest_prediction,
                                            'formatted_predictions': formatted_prediction})
 
@@ -69,3 +74,31 @@ def archive(request):
 
 def api(request):
     return render(request, 'api.jinja2')
+
+
+class APIViewSetAll(viewsets.ModelViewSet):
+    """
+    API endpoint that returns all of the predictions
+    """
+    queryset = Photo.objects.all().order_by('-datetime')
+    serializer_class = PredictionSerializer
+    http_method_names = ['get']
+
+
+class APIViewSetAllOut(viewsets.ModelViewSet):
+    """
+    API endpoint that returns predictions when She was 'All the way out'
+    """
+    queryset = Photo.objects.filter(winner='All the way out').order_by('-datetime')
+    serializer_class = PredictionSerializer
+    http_method_names = ['get']
+
+
+@api_view(('GET',))
+def last_prediction(request):
+    """
+    API endpoint that returns the last prediction
+    """
+    latest = Photo.objects.latest('id')
+    serializer_class = PredictionSerializer(latest)
+    return Response(serializer_class.data, status=200)

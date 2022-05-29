@@ -1,24 +1,42 @@
 {% extends 'base.jinja2' %}
 
 {% block subtitle %}
- <div class="container">
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
         <br/>
-          <h2>API <small>A RESTful api to retrieve current prediction</small></h2>
+          <h2>API <small>A RESTful API to retrieve the predictions</small></h2>
       </div>
     </div>
-         </div>
 
 {% endblock subtitle %}
 
 {% block content %}
     <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+          <h4>API endpoints</h4>
+          <p>The web-browsable API has three endpoints defined. Click on the links below to view the results of a request.
+          </p>
           <ul>
-              <li>API description</li>
-              <li>sample or request generator</li>
+              <li><a href="{%url "api-last"%}">Last prediction</a> returns the last prediction as a single results</li>
+              <li><a href="{%url "api-all"%}">All predictions</a> returns all of the predictions made by the model ordered from most recent to oldest</li>
+              <li><a href="{%url "api-all-out"%}">All predictions when She was 'All the way out'</a> returns only those predictions ordered from most recent to oldest</li>
+          </ul>
+<br>
+          <h4>API description</h4>
+          <p>Each of the above endpoints returns responses with the fields below.
+              The Last Prediction endpoint returns a single prediction, but the other two endpoints return multiple results.
+              These two return paginated results with 10 results per page. </p>
+          <h5><code>winner</code> <i>String</i></h5>  &emsp;&emsp;The model's prediction of Tahoma's visibility.
+                  Possible values are: 'All the way out', 'Just the bottom', 'Not out', or 'Only the tip'
+                  <h5><code>datetime</code> <i>datetime</i> </h5> &emsp;&emsp;The datetime when the prediction was made. It is a timezone aware datetime in the PST (UTC-7) timezone. EX: "2022-05-26T04:51:17.408950-07:00"
+                  <h5><code>name</code> <i>String</i> </h5> &emsp;&emsp;A string  with the datetime when the prediction was made formatted %Y-%M-%D_%H_%M (e.g. "2022-05-26_4_51")
+                  <h5> <code>pred_all</code> <i>Float</i> </h5> &emsp;&emsp;The model's predicted probability [0,1] that Tahoma was "All the way out"
+                 <h5><code>pred_tip</code> <i>Float</i> </h5> &emsp;&emsp;The model's predicted probability [0,1] that "Only the tip" of Tahoma was visible
+                  <h5><code>pred_base</code> <i>Float</i> </h5> &emsp;&emsp;The model's predicted probability [0,1] that "Just the bottom" of Tahoma was visible
+                  <h5><code>pred_none</code> <i>Float</i> </h5> &emsp;&emsp;The model's predicted probability [0,1] that Tahoma was "Not out"
+
           </ul>
       </div>
     </div>
 {% endblock content %}
+
