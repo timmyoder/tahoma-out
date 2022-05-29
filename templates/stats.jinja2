@@ -41,11 +41,17 @@
 
         <div class="row">
       <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-          <h3>Day of the year with the most "All the way out" predictions</h3>
+          <h4>Day of the year with the most "All the way out" predictions</h4>
 
           <p>On {{ stats.max_out_date }} She was out for about {{ stats.max_out_time }}</p>
 
-          <br/>
+          <h4>The earliest She was out</h4>
+
+          <p>On {{ stats.earliest_date }} She was out at {{ stats.earliest_time }}</p>
+
+          <h4>The latest She was out</h4>
+
+          <p>On {{ stats.latest_date }} She was out at {{ stats.latest_time }}</p>
       </div>
     </div>
             <hr/>
@@ -56,7 +62,7 @@
               I think it is neat how you can see the days getting longer as the year goes on.</p>
 
           <p>It's also a great example of how messy data is in real life.
-          The missing days in the beginning of May are from with King 5 changed the format of their
+          The missing days in the beginning of May are from when King 5 changed the format of their
           webcam picture. Unfortunately, it took me a few days to realize what was happening...</p>
         <div class="col-md-10">
             <figure><img src="{{ heatmap.heatmap_plot.url }}" alt="She Out Heatmap" />

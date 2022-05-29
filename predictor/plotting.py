@@ -78,7 +78,7 @@ class Heatmap:
         plt.legend(handles=legend_elements,
                    bbox_to_anchor=(1.04, 0.5 * num_years),
                    loc="center left", borderaxespad=0)
-
+        fig.suptitle("Tahoma Visibility from Seattle Waterfront", fontsize=20)
         plt.tight_layout()
         plt.savefig(MEDIA_DIR / 'heatmap_plot.png')
         plt.close()
