@@ -48,6 +48,21 @@
           <br/>
       </div>
     </div>
+            <hr/>
+        <div class="row">
+      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+        <h3>Visualizing Visibility</h3>
+          <p>The heatmap below shows all the predictions made.
+              I think it is neat how you can see the days getting longer as the year goes on.</p>
+
+          <p>It's also a great example of how messy data is in real life.
+          The missing days in the beginning of May are from with King 5 changed the format of their
+          webcam picture. Unfortunately, it took me a few days to realize what was happening...</p>
+        <div class="col-md-10">
+            {{ stats.heatmap_plot|safe }}
+        </div>
+      </div>
+    </div>
 
 
 
