@@ -25,7 +25,8 @@ def about(request):
 
 
 def stats(request):
-    heatmap = Plot.objects.filter(label='heatmap')
+    heatmap_query = Plot.objects.filter(label='heatmap')
+    heatmap = [h for h in heatmap_query][0]
     statistics = Stats()
     return render(request, 'stats.jinja2', {'stats': statistics,
                                             'heatmap': heatmap})

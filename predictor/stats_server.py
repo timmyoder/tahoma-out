@@ -1,12 +1,6 @@
 from pytz import timezone
 
-import numpy as np
 import pandas as pd
-
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from matplotlib.patches import Patch
-from matplotlib.colors import LinearSegmentedColormap
 
 from predictor.models import Photo
 
@@ -34,7 +28,6 @@ class Stats:
         self.heatmap_plot = None
 
         self.most_out()
-        self.plot_heatmap()
 
     def most_out(self):
         query = Photo.objects.filter(winner='All the way out')
