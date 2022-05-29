@@ -3,11 +3,12 @@ import datetime as dt
 import cloudinary.uploader as uploader
 from PIL import Image
 
-from predictor.models import Photo
+from predictor.models import Photo, Plot
+from predictor.prediction import Predictor
+from predictor.plotting import Heatmap
 from training.retrieve_pics import get_current_image
 from training.image_sizes import original_image_size
 from config import MEDIA_DIR
-from predictor.prediction import Predictor
 
 LIVE_MODEL = 'mobilenetV2_fine_tuned.h5'
 
@@ -58,7 +59,20 @@ class Archiver(Predictor):
                                          model=self.model_name
                                          )
 
+    @staticmethod
+    def upload_heatmap():
+        Heatmap()
+        Plot.objects.update_or_create(label='heatmap',
+                                      heatmap_plot=uploader.upload_resource(
+                                          MEDIA_DIR / 'heatmap_plot.png',
+                                          public_id="plots/heatmap",
+                                          overwrite=True,
+                                          resource_type='image',
+                                          invalidate=True, )
+                                      )
+
     def archive(self):
         self.update_image()
         self.load_and_predict()
         self.upload_prediction()
+        self.upload_heatmap()

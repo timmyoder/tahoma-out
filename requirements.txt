@@ -15,7 +15,6 @@ cloudinary
 dj3-cloudinary-storage
 pandas
 matplotlib
-mpld3
 
 # for training, not needed for deployment
 # tensorflow<=2.4

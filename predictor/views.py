@@ -3,7 +3,7 @@ import datetime as dt
 from django.shortcuts import render
 from django.utils.timezone import make_aware
 
-from predictor.models import Photo
+from predictor.models import Photo, Plot
 from predictor.forms import ExampleForm
 from predictor.stats_server import Stats
 
@@ -25,8 +25,10 @@ def about(request):
 
 
 def stats(request):
+    heatmap = Plot.objects.filter(label='heatmap')
     statistics = Stats()
-    return render(request, 'stats.jinja2', {'stats': statistics})
+    return render(request, 'stats.jinja2', {'stats': statistics,
+                                            'heatmap': heatmap})
 
 
 def archive(request):

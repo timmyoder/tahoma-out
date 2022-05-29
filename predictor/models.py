@@ -13,3 +13,10 @@ class Photo(models.Model):
     pred_base = models.FloatField(null=True)
     pred_none = models.FloatField(null=True)
     model = models.CharField(null=True, max_length=50)
+
+
+class Plot(models.Model):
+    label = models.CharField(max_length=50, primary_key=True)
+    datetime = models.DateTimeField(auto_now_add=True)
+    heatmap_plot = CloudinaryField('heatmap_plot')
+
