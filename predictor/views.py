@@ -51,7 +51,9 @@ def archive(request):
                 start_dt = dt.datetime.combine(date, start_time)
 
             if end_time is None:
-                end_dt = dt.datetime(date.year, date.month, date.day + 1)
+                next_day = date + dt.timedelta(days=1)
+                end_dt = dt.datetime(next_day.year, next_day.month, next_day.day)
+
             else:
                 end_dt = dt.datetime(date.year, date.month, date.day, end_time.hour)
 
