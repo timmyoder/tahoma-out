@@ -2,7 +2,7 @@ import pathlib
 
 ROOT = pathlib.Path(__file__).parent
 MODELS_DIR = ROOT / 'models'
-PHOTOS_DIR = ROOT / 'data' / 'raw_images'
+PHOTOS_DIR = ROOT / 'data' / 'raw_images_needle'
 SRC = ROOT / 'src'
 LOGS = ROOT / 'logs'
 
