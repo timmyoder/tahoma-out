@@ -21,9 +21,8 @@ class Predictor:
         self.current_image = prediction_image
         self.current_image_array = None
         self.labels = ['All the way out',
-                       'Just the bottom',
-                       'Not out',
-                       'Only the tip']
+                       'Kinda',
+                       'Not out']
         self.formatted_predictions = None
         self.winner = None
 

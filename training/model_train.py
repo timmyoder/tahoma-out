@@ -10,16 +10,19 @@ import mlflow
 from config import PHOTOS_DIR, MODELS_DIR, MODEL_LOG, LOGS
 from training.image_sizes import original_image_size, resize_image_size, mobile_net_image_size
 
+IMAGE_HEIGHT, IMAGE_WIDTH = original_image_size
+
 FIG_DIR = LOGS / 'figures'
+TRAINING_DATA_DIR = PHOTOS_DIR / 'training'
 
 mlflow.tensorflow.autolog()
 
 batch_size = 16
 
-class_weights = {0: 2.48,
-                 1: 1.2,
-                 2: 1.,
-                 3: 1.2}
+class_weights = {0: 6.37,  # 3,396
+                 1: 4.19,  # 2,580 (50%)
+                 2: 1.,  # 21,644
+                 }
 
 
 def plot_rand_images(square_num_pics):
@@ -47,10 +50,8 @@ def mobilenet_transfer_learning(mobel_net):
     dropout_rate = .2
 
     inputs = layers.Input(shape=(*original_image_size, 3))
-    x = layers.experimental.preprocessing.Resizing(*resize_image_size)(inputs)
-    x = layers.Lambda(lambda xx: image.resize_with_pad(xx, *mobile_net_image_size,
-                                                       method='bilinear',
-                                                       antialias=False))(x)
+    x = tf.keras.layers.Cropping2D(cropping=((0, IMAGE_HEIGHT-IMAGE_WIDTH), (0, 0)))(inputs)
+    x = layers.experimental.preprocessing.Resizing(*resize_image_size)(x)
     x = layers.experimental.preprocessing.Rescaling(1. / 255)(x)
     x = base_model(x, training=False)
     x = layers.GlobalAveragePooling2D()(x)
@@ -65,12 +66,12 @@ def mobilenet_transfer_learning(mobel_net):
 
     initial_epochs = 10
 
-    model_path = MODELS_DIR / 'mobilenetV2_fine_tuned.h5'
+    model_path = MODELS_DIR / 'mobilenetV2_fine_tuned_needle.h5'
     early_stopping_cb = tf.keras.callbacks.EarlyStopping(patience=4)
     model_checkpoint_cb = tf.keras.callbacks.ModelCheckpoint(model_path,
                                                              save_best_only=True)
-    run_index = 6  # increment every time you train the model
-    run_logdir = MODEL_LOG / f'mobile_net_{run_index}'
+    run_index = 0  # increment every time you train the model
+    run_logdir = MODEL_LOG / f'mobile_net_needle_{run_index}'
     tensorboard_cb = tf.keras.callbacks.TensorBoard(run_logdir)
     callbacks = [early_stopping_cb,
                  model_checkpoint_cb,
@@ -118,51 +119,6 @@ def mobilenet_transfer_learning(mobel_net):
         return history_fine_tune, model
 
 
-def train_cnn():
-    with mlflow.start_run():
-        mlflow.log_param("image_size", resize_image_size)
-        model = tf.keras.models.Sequential([
-            layers.experimental.preprocessing.Resizing(*resize_image_size),
-            layers.experimental.preprocessing.Rescaling(1. / 255),
-            layers.Conv2D(64, 7, strides=2, activation='relu',
-                          padding='same', input_shape=[*resize_image_size, 3]),
-            layers.MaxPool2D(2),
-            layers.Conv2D(128, 3, activation='relu', padding='same'),
-            layers.Conv2D(128, 3, activation='relu', padding='same'),
-            layers.MaxPool2D(2),
-            layers.Conv2D(256, 3, activation='relu', padding='same'),
-            layers.Conv2D(256, 3, activation='relu', padding='same'),
-            layers.MaxPool2D(2),
-            layers.Flatten(),
-            layers.Dense(128, activation='relu'),
-            layers.Dropout(0.5),
-            layers.Dense(64, activation='relu'),
-            layers.Dropout(0.5),
-            layers.Dense(4, activation='softmax')
-        ])
-
-        model.compile(loss='sparse_categorical_crossentropy',
-                      optimizer='sgd',
-                      metrics=['accuracy'])
-
-        model_path = MODELS_DIR / 'simple_cnn_weighted_small.h5'
-        early_stopping_cb = tf.keras.callbacks.EarlyStopping(patience=8)
-        model_checkpoint_cb = tf.keras.callbacks.ModelCheckpoint(model_path,
-                                                                 save_best_only=True)
-        run_index = 5  # increment every time you train the model
-        run_logdir = MODEL_LOG / f'simple_cnn_run_{run_index}'
-        tensorboard_cb = tf.keras.callbacks.TensorBoard(run_logdir)
-        callbacks = [early_stopping_cb,
-                     model_checkpoint_cb,
-                     tensorboard_cb
-                     ]
-
-        history = model.fit(train_ds, epochs=20, class_weight=class_weights,
-                            validation_data=val_ds, callbacks=callbacks)
-
-        return history, model
-
-
 def plot_history(accuracy, val_accuracy, loss, val_loss, initial_epochs):
     plt.figure(figsize=(8, 8))
     plt.subplot(2, 1, 1)
@@ -186,7 +142,7 @@ def plot_history(accuracy, val_accuracy, loss, val_loss, initial_epochs):
 
 
 if __name__ == '__main__':
-    dataset_options = {'directory': PHOTOS_DIR,
+    dataset_options = {'directory': TRAINING_DATA_DIR,
                        'labels': 'inferred',
                        'label_mode': 'int',
                        'validation_split': 0.2,
@@ -206,3 +162,4 @@ if __name__ == '__main__':
 
     # hist, mod = train_cnn()
     hist, mode = mobilenet_transfer_learning(MobileNetV2)
+

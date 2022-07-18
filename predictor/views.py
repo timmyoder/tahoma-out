@@ -18,8 +18,7 @@ def home(request):
 
     predictions = [latest_prediction.pred_all,
                    latest_prediction.pred_base,
-                   latest_prediction.pred_none,
-                   latest_prediction.pred_tip]
+                   latest_prediction.pred_none]
     formatted_prediction = [f'{p * 100:.2f}%' for p in predictions]
     return render(request, 'home.jinja2', {'photo_model': latest_prediction,
                                            'formatted_predictions': formatted_prediction})

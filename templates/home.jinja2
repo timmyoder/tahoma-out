@@ -19,8 +19,8 @@
     <div class="row">
       <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
       <div class="col-sm">
-        <figure><img src="{{ photo_model.image.url }}" alt="King5 waterfront webcam" />
-          <figcaption>Last image pulled from the waterfront webcam</figcaption>
+        <figure><img src="{{ photo_model.image.url }}" alt="Space Needle webcam" />
+          <figcaption>Last image pulled from the <a href="https://www.spaceneedle.com/webcam/">Space Needle webcam</a>.</figcaption>
         </figure>
       </div>
       <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
@@ -32,8 +32,7 @@
         <p>Prediction confidence:</p>
           <ul>
               <li>All the way out: {{ formatted_predictions.0}}</li>
-              <li>Bottom out: {{ formatted_predictions.1 }}</li>
-              <li>Only the tip is out: {{ formatted_predictions.3 }}</li>
+              <li>Kinda out: {{ formatted_predictions.1 }}</li>
               <li>Not out: {{ formatted_predictions.2 }}</li>
           </ul>
 

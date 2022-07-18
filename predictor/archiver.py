@@ -10,7 +10,7 @@ from training.retrieve_pics import get_current_image
 from training.image_sizes import original_image_size
 from config import MEDIA_DIR
 
-LIVE_MODEL = 'mobilenetV2_fine_tuned.h5'
+LIVE_MODEL = 'mobilenetV2_fine_tuned_needle.h5'
 
 
 class Archiver(Predictor):
@@ -43,7 +43,6 @@ class Archiver(Predictor):
 
         pred_all = predictions[0]
         pred_base = predictions[1]
-        pred_tip = predictions[3]
         pred_none = predictions[2]
 
         winner_id = self.prediction.argmax()
@@ -55,7 +54,6 @@ class Archiver(Predictor):
                                          pred_all=pred_all,
                                          pred_base=pred_base,
                                          pred_none=pred_none,
-                                         pred_tip=pred_tip,
                                          model=self.model_name
                                          )
 
