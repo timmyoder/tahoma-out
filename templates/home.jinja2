@@ -17,28 +17,24 @@
 {% block content %}
 
     <div class="row">
-      <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-lg-offset-1">
+            <h2>I think it is: {{ photo_model.winner}}</h2>
+            <p>Prediction confidence:</p>
+              <ul>
+                  <li>All the way out: {{ formatted_predictions.0}}</li>
+                  <li>Kinda out: {{ formatted_predictions.1 }}</li>
+                  <li>Not out: {{ formatted_predictions.2 }}</li>
+              </ul>
+
+              <p>Check out the <a href="{% url 'about' %}">About page</a> for more info.</p>
+        </div>
+
       <div class="col-sm">
         <figure><img src="{{ photo_model.image.url }}" alt="Space Needle webcam" />
           <figcaption>Last image pulled from the <a href="https://www.spaceneedle.com/webcam/">Space Needle webcam</a>.</figcaption>
         </figure>
       </div>
-      <div class="col-sm-1 hidden-sm col-md-2 col-lg-3"></div>
     </div>
-
-    <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-        <h2>I think it is: {{ photo_model.winner}}</h2>
-        <p>Prediction confidence:</p>
-          <ul>
-              <li>All the way out: {{ formatted_predictions.0}}</li>
-              <li>Kinda out: {{ formatted_predictions.1 }}</li>
-              <li>Not out: {{ formatted_predictions.2 }}</li>
-          </ul>
-
-          <p>Check out the <a href="{% url 'about' %}">About page</a> for more info.</p>
-      </div>
-    </div>
-
+    
 
 {% endblock content %}

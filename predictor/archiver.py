@@ -73,4 +73,4 @@ class Archiver(Predictor):
         self.update_image()
         self.load_and_predict()
         self.upload_prediction()
-        self.upload_heatmap()
+        # self.upload_heatmap()
