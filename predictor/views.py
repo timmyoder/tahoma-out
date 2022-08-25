@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from predictor.models import Photo, Plot
-from predictor.forms import ExampleForm
+from predictor.forms import DatetimeForm
 from predictor.stats_server import Stats
 from predictor.serializers import PredictionSerializer
 
@@ -38,7 +38,7 @@ def stats(request):
 def archive(request):
     context = {}
     if request.method == 'POST':
-        form = ExampleForm(request.POST)
+        form = DatetimeForm(request.POST)
         if form.is_valid():
             date = form.cleaned_data['display_date']
             start_time = form.cleaned_data['start_time']
@@ -66,7 +66,7 @@ def archive(request):
             context.update({'results': results})
 
     else:
-        form = ExampleForm()
+        form = DatetimeForm()
 
     context['form'] = form
 
