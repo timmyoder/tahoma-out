@@ -47,6 +47,7 @@ class Archiver(Predictor):
 
         winner_id = self.prediction.argmax()
 
+        # todo: update to reflect new model
         new_photo = Photo.objects.create(name=label,
                                          image=uploader.upload_resource(self.current_image),
                                          winner=self.winner,

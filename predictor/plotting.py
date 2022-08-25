@@ -15,6 +15,7 @@ MAX_HEAT = 100
 MIN_HEAT = 0
 
 
+# todo: make clickable to archive time
 class Heatmap:
     def __init__(self):
         self.heatmap_data = None
@@ -24,6 +25,7 @@ class Heatmap:
         self.plot_heatmap()
 
     def get_heatmap_data(self):
+        # todo: update this to reflect three classes
         query = Photo.objects
         all_predictions = pd.DataFrame.from_records(query.values())
         all_predictions['datetime'] = all_predictions['datetime'].dt.tz_convert('US/Pacific')
@@ -41,6 +43,7 @@ class Heatmap:
         self.heatmap_data = heatmap_data.set_index('round_datetime')
 
     def plot_heatmap(self):
+        # todo: update this to reflect three classes
         # fake_index = pd.date_range('2020-01-01', '2020-05-01', freq='15min',
         #                            tz='US/Pacific')
         # heatmap_data = pd.DataFrame(np.random.randint(0, 3, len(fake_index)) * 50,

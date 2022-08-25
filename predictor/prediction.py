@@ -26,6 +26,7 @@ class Predictor:
         self.formatted_predictions = None
         self.winner = None
 
+    # todo: change to load from web directly instead of downloading
     def load_image(self):
         image = load_img(self.current_image)
         input_arr = img_to_array(image)
