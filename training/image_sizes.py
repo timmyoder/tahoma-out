@@ -1,6 +1,13 @@
-original_image_size = (1080, 512)
-resize_image_size = (128, 128)
-mobile_net_image_size = (128, 128)
+from config import FOUR_PREDICTIONS
+
+if FOUR_PREDICTIONS:
+    original_image_size = (563, 1000)
+    resize_image_size = (64, 128)
+    mobile_net_image_size = (128, 128)
+else:
+    original_image_size = (1080, 512)
+    resize_image_size = (128, 128)
+    mobile_net_image_size = (128, 128)
 
 
 if __name__ == '__main__':

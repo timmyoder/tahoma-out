@@ -11,17 +11,25 @@ from predictor.models import Photo, Plot
 from predictor.forms import DatetimeForm
 from predictor.stats_server import Stats
 from predictor.serializers import PredictionSerializer
+from config import FOUR_PREDICTIONS
 
 
 def home(request):
     latest_prediction = Photo.objects.latest('id')
 
-    predictions = [latest_prediction.pred_all,
-                   latest_prediction.pred_base,
-                   latest_prediction.pred_none]
-    formatted_prediction = [f'{p * 100:.2f}%' for p in predictions]
+    if FOUR_PREDICTIONS:
+        predictions = [latest_prediction.pred_all,
+                       latest_prediction.pred_base,
+                       latest_prediction.pred_none,
+                       latest_prediction.pred_tip]
+    else:
+        predictions = [latest_prediction.pred_all,
+                       latest_prediction.pred_base,
+                       latest_prediction.pred_none]
+    formatted_prediction = [f'{p * 100:.2f}%' for p in predictions if p is not None]
     return render(request, 'home.jinja2', {'photo_model': latest_prediction,
-                                           'formatted_predictions': formatted_prediction})
+                                           'formatted_predictions': formatted_prediction,
+                                           'FOUR_PREDICTIONS': FOUR_PREDICTIONS})
 
 
 def about(request):

@@ -8,9 +8,9 @@ from predictor.prediction import Predictor
 from predictor.plotting import Heatmap
 from training.retrieve_pics import get_current_image
 from training.image_sizes import original_image_size
-from config import MEDIA_DIR
+from config import MEDIA_DIR, MODEL, FOUR_PREDICTIONS
 
-LIVE_MODEL = 'mobilenetV2_fine_tuned_needle.h5'
+LIVE_MODEL = MODEL
 
 
 class Archiver(Predictor):
@@ -45,6 +45,11 @@ class Archiver(Predictor):
         pred_base = predictions[1]
         pred_none = predictions[2]
 
+        if FOUR_PREDICTIONS:
+            pred_tip = predictions[3]
+        else:
+            pred_tip = None
+
         winner_id = self.prediction.argmax()
 
         new_photo = Photo.objects.create(name=label,
@@ -54,6 +59,7 @@ class Archiver(Predictor):
                                          pred_all=pred_all,
                                          pred_base=pred_base,
                                          pred_none=pred_none,
+                                         pred_tip=pred_tip,
                                          model=self.model_name
                                          )
 
@@ -73,4 +79,5 @@ class Archiver(Predictor):
         self.update_image()
         self.load_and_predict()
         self.upload_prediction()
-        # self.upload_heatmap()
+        if FOUR_PREDICTIONS:
+            self.upload_heatmap()

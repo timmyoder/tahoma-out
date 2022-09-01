@@ -6,7 +6,7 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
 from training.image_sizes import mobile_net_image_size, resize_image_size
 
-from config import MODELS_DIR, MEDIA_DIR
+from config import MODELS_DIR, MEDIA_DIR, FOUR_PREDICTIONS
 
 
 class Predictor:
@@ -20,9 +20,15 @@ class Predictor:
                                                 'resize_image_size': resize_image_size})
         self.current_image = prediction_image
         self.current_image_array = None
-        self.labels = ['All the way out',
-                       'Kinda',
-                       'Not out']
+        if FOUR_PREDICTIONS:
+            self.labels = ['All the way out',
+                           'Just the bottom',
+                           'Not out',
+                           'Only the tip']
+        else:
+            self.labels = ['All the way out',
+                           'Kinda',
+                           'Not out']
         self.formatted_predictions = None
         self.winner = None
 

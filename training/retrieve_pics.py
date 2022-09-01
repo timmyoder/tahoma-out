@@ -5,7 +5,7 @@ import pandas as pd
 import requests
 from loguru import logger
 
-from config import PHOTOS_DIR, PHOTO_LOG, MEDIA_DIR
+from config import PHOTOS_DIR, PHOTO_LOG, MEDIA_DIR, FOUR_PREDICTIONS
 
 cam_url = 'https://cdn.tegna-media.com/king/weather/waterfront.jpg'
 
@@ -61,12 +61,16 @@ def training_data_downloader(start, end):
 
 def get_current_image():
     live_path = MEDIA_DIR / 'live.png'
-    now = dt.datetime.now()
-    last_time = now - dt.timedelta(minutes=now.minute % 10,
-                                   seconds=now.second,
-                                   microseconds=now.microsecond)
-    last_time = last_time - dt.timedelta(minutes=20)
-    url = get_pic_url(*datetime_formatter(last_time))
+
+    if FOUR_PREDICTIONS:
+        url = cam_url
+    else:
+        now = dt.datetime.now()
+        last_time = now - dt.timedelta(minutes=now.minute % 10,
+                                       seconds=now.second,
+                                       microseconds=now.microsecond)
+        last_time = last_time - dt.timedelta(minutes=20)
+        url = get_pic_url(*datetime_formatter(last_time))
     try:
         response = requests.get(url, stream=True)
         logger.info(f'retrieving live photo')

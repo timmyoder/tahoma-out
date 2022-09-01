@@ -12,3 +12,6 @@ MEDIA_DIR = ROOT / 'media'
 
 PHOTO_LOG = LOGS / 'p.log'
 MODEL_LOG = LOGS / 'model.log'
+
+FOUR_PREDICTIONS = True
+MODEL = 'mobilenetV2_fine_tuned.h5'
